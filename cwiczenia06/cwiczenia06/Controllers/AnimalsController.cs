@@ -11,35 +11,49 @@ namespace cwiczenia06.Controllers;
 public class AnimalsController : ControllerBase
 {
     private readonly AnimalRepository _animalRepository;
-    
+
     public AnimalsController(AnimalRepository animalRepository)
     {
         _animalRepository = animalRepository;
     }
-    
+
     [HttpGet]
     public IActionResult GetAnimals()
     {
-        var animals = _animalRepository.GetAnimals();
-        
+        var animals = _animalRepository.GetAnimals("name");
+
+        return Ok(animals);
+    }
+
+    [HttpGet("{orderBy}")]
+    public IActionResult GetAnimals(string orderBy)
+    {
+        var animals = _animalRepository.GetAnimals(orderBy);
+
         return Ok(animals);
     }
 
     [HttpPost]
-    public IActionResult AddAnimal(AddAnimal animal)
+    public IActionResult AddAnimal(Animal animal)
     {
-        //Otworzenie polaczenia
-        using SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Default"));
-        connection.Open();
-        
-        //Definicja query
-        using SqlCommand command = new SqlCommand();
-        command.Connection = connection;
-        command.CommandText = "INSERT INTO Animal VALUES (animalName, '', ', ''):";
-        command.Parameters.AddWithValue("animalValue", animal.Name);
-
-        command.ExecuteNonQuery();
+        _animalRepository.AddAnimal(animal);
 
         return Created("api/animals", null);
+    }
+
+    [HttpPut("{idAnimal}")]
+    public IActionResult UpdateAnimal(int idAnimal, AnimalToUpdate animal)
+    {
+        _animalRepository.UpdateAnimal(idAnimal, animal);
+
+        return Ok();
+    }
+
+    [HttpDelete("{idAnimal}")]
+    public IActionResult DeleteAnimal(int idAnimal)
+    {
+        _animalRepository.DeleteAnimal(idAnimal);
+
+        return Ok();
     }
 }

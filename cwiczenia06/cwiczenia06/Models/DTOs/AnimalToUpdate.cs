@@ -1,8 +1,7 @@
-﻿namespace cwiczenia06.Models;
+﻿namespace cwiczenia06.Models.DTOs;
 
-public class Animal
+public class AnimalToUpdate
 {
-    public int IdAnimal { get; set; }
     public string Name { get; set; }
     public string Desc { get; set; }
     public string Cat { get; set; }
